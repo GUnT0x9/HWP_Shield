@@ -1,0 +1,96 @@
+version: '3.8'
+
+services:
+  clamav:
+    image: clamav/clamav:latest
+    container_name: hwpshield-clamav
+    restart: unless-stopped
+    volumes:
+      - clamav-data:/var/lib/clamav
+    networks:
+      - hwpshield-network
+    healthcheck:
+      test: ["CMD", "clamdcheck.sh"]
+      interval: 60s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
+
+  backend:
+    build: ./backend
+    container_name: hwpshield-backend
+    
+    # Temp filesystem for uploads and processing
+    tmpfs:
+      - /tmp:size=100M,noexec,nosuid,nodev,mode=777
+    
+    # Drop all capabilities
+    cap_drop:
+      - ALL
+    
+    security_opt:
+      - no-new-privileges:true
+    
+    # Resource limits
+    deploy:
+      resources:
+        limits:
+          cpus: '2.0'
+          memory: 1G
+        reservations:
+          cpus: '0.5'
+          memory: 256M
+    
+    environment:
+      - TEMP=/tmp/hwpshield
+      - MAX_FILE_SIZE=52428800
+      - RATE_LIMIT=10
+      - SECRET_KEY=${SECRET_KEY:-change-me-in-production}
+      - PYTHONUNBUFFERED=1
+    
+    volumes:
+      - /tmp/hwpshield
+    
+    ports:
+      - "8000:8000"
+    
+    networks:
+      - hwpshield-network
+    
+    depends_on:
+      - clamav
+    
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8000/api/health')"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
+    
+    restart: unless-stopped
+
+  frontend:
+    build: ./frontend
+    container_name: hwpshield-frontend
+    
+    environment:
+      - VITE_API_URL=http://backend:8000/api
+    
+    ports:
+      - "3000:3000"
+    
+    networks:
+      - hwpshield-network
+    
+    depends_on:
+      backend:
+        condition: service_healthy
+    
+    restart: unless-stopped
+
+volumes:
+  clamav-data:
+
+networks:
+  hwpshield-network:
+    driver: bridge

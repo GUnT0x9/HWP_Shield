@@ -1,0 +1,49 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+  <defs>
+    <linearGradient id="docGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#ffffff;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#f3f4f6;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="searchGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#6366f1;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#4f46e5;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  
+  <!-- Document page -->
+  <path d="M25 15 L55 15 L75 35 L75 80 Q75 85 70 85 L30 85 Q25 85 25 80 Z" 
+        fill="url(#docGradient)" 
+        stroke="#d1d5db" 
+        stroke-width="2"/>
+  
+  <!-- Document fold corner -->
+  <path d="M55 15 L55 35 L75 35" 
+        fill="none" 
+        stroke="#d1d5db" 
+        stroke-width="2"/>
+  <path d="M55 15 L75 35 L55 35 Z" 
+        fill="#e5e7eb"/>
+  
+  <!-- Document lines (text simulation) -->
+  <rect x="32" y="45" width="36" height="3" rx="1" fill="#9ca3af"/>
+  <rect x="32" y="52" width="28" height="3" rx="1" fill="#9ca3af"/>
+  <rect x="32" y="59" width="32" height="3" rx="1" fill="#9ca3af"/>
+  <rect x="32" y="66" width="20" height="3" rx="1" fill="#9ca3af"/>
+  
+  <!-- Magnifying glass circle -->
+  <circle cx="58" cy="55" r="18" 
+          fill="none" 
+          stroke="url(#searchGradient)" 
+          stroke-width="5"/>
+  
+  <!-- Magnifying glass handle -->
+  <path d="M71 68 L82 79" 
+        stroke="url(#searchGradient)" 
+        stroke-width="6" 
+        stroke-linecap="round"/>
+  
+  <!-- Search highlight in document -->
+  <circle cx="58" cy="55" r="8" 
+          fill="#6366f1" 
+          opacity="0.2"/>
+</svg>
