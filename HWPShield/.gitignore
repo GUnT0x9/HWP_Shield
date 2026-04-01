@@ -70,3 +70,5 @@ test_samples/
 
 # Git
 .git/
+API/
+MoodCalendar/
